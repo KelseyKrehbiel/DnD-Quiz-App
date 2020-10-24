@@ -5,24 +5,54 @@ const store = {
   // 5 or more questions are required
   questions: [
     {
-      question: 'What color is broccoli?',
+      question: 'What is the name of the core rule book used to create player characters?',
       answers: [
-        'red',
-        'orange',
-        'pink',
-        'green'
+        "Dungeon Master's Guide",
+        "Monster Manuel",
+        "Character Guide",
+        "Player's Handbook"
       ],
-      correctAnswer: 'green'
+      correctAnswer: "Player's Handbook"
     },
     {
-      question: 'What is the current year?',
+      question: 'What is not a core attribute for player characters?',
       answers: [
-        '1970',
-        '2015',
-        '2019',
-        '2005'
+        'Wisdom',
+        'Strength',
+        'Charisma',
+        'Grit'
       ],
-      correctAnswer: '2019'
+      correctAnswer: 'Grit'
+    },
+    {
+      question: 'What is the standard notation for a six sided dice?',
+      answers: [
+        '6sd',
+        'ssd',
+        'd6',
+        'cube'
+      ],
+      correctAnswer: 'd6'
+    },
+    {
+      question: 'What is the name of the class that specializes an stealth and Sneak Attacks?',
+      answers: [
+        'rouge',
+        'rogue',
+        'barbarian',
+        'sneakster'
+      ],
+      correctAnswer: 'rogue'
+    },
+    {
+      question: 'How much distance does a grid square represent on a battle map?',
+      answers: [
+        '5 feet',
+        '3 meters',
+        '12 inches',
+        '1 mile'
+      ],
+      correctAnswer: '5 feet'
     }
   ],
   quizStarted: false,
