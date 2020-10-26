@@ -6,3 +6,56 @@
   * https://github.com/andreacardybailey/responsive_example/blob/master/styles/responsive-base.css 
   *
 */
+main {
+  margin-top: 60px;
+
+}
+
+/*header style*/
+header{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+div{
+  background-color: gray;
+  width: 70%;
+  padding: 20px;
+  margin: auto;
+}
+
+
+div p{
+  display: flex;
+  flex-direction: row;
+}
+
+button{
+  float: right;
+}
+
+.noBackground{
+  background-color: white;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+
+
+}
+
+
+/* Groups & Items  (Desktop) */
+
+@media all and (min-width: 800px) {
+
+  section, h1 {
+      padding: 0 10%;
+  }
+
+  .group {
+      flex-direction: row;
+  }
+
+}

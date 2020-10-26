@@ -75,7 +75,7 @@ const store = {
  * 
  */
 
-/********** TEMPLATE GEN/ERATION FUNCTIONS **********/
+/********** TEMPLATE GENERATION FUNCTIONS **********/
 
 // These functions return HTML templates
 function generateQuizQuestion(questionNumber){
@@ -113,7 +113,7 @@ function generateAnswerComment(isCorrect){
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
-function renderQuiz(){
+function render(){
   //render the page with appropriate elements
 }
 
@@ -121,25 +121,34 @@ function renderQuiz(){
 
 // These functions handle events (submit, click, etc)
 function handleWelcomePage(){
-  //load the welcome page
-  let welcomeHTML = `<div class="start-screen">
-                      <p>This quiz has questions about the game Dungeons and Dragons</p>
-                      <button type="button" id="start">Begin Quiz</button>
-                    </div>
-                    `;
-  return welcomeHTML;
+  //generate welcome page
+  if (store.quizStarted === false){
+    let welcomeHTML = `<div class="start-screen">
+                        <p>This quiz has questions about the game Dungeons and Dragons</p>
+                        <button type="button" id="start">Begin Quiz</button>
+                      </div>
+                      `;
+    $('main').html(welcomeHTML);
+    render();
+  }
 }
 
 function handleBeginQuiz(){
   //when Start Quiz button is pressed show the first question
   $('body').on('click', '#start', function (event) {
     store.quizStarted = true;
-    renderQuiz();
+    render();
   });
 }
 
 function handleAnswerSubmitted(){
   //get the choice selection
+  $('body').on('submit','#question-form',function(event){
+    console.log("answer submitted");
+    event.preventDefault();
+
+    let selectedOption = $('input[name=options]:checked').val();
+  });
   //let choice = 
   //send to grader function
 
@@ -163,5 +172,11 @@ function scoreQuestion(choice){
 }
 
 function handleQuizApp(){
-  renderQuiz();
+  render();
+  handleWelcomePage();
+  handleBeginQuiz();
+  handleAnswerSubmitted();
+  //handleNextQuestion();
 }
+
+$(handleQuizApp)
