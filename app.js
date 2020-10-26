@@ -78,23 +78,31 @@ const store = {
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
 // These functions return HTML templates
-function generateQuizQuestion(questionNumber){
-  //use quesiton data to generate HTML
-  let quesiton = store[questionNumber].question;
-  let answerList = store[questionNumber].answers;
+function generateQuizQuestion(){
+  //use question data to generate HTML
+  let question = store.questions[store.questionNumber].question;
+  let answerList = store.questions[store.questionNumber].answers;
   //start the form
   let questionHTML = `<form action="/action_page.php">
-                        <p>{question}</p>`
-  //add radio button element for each option
-  answerList.forEach(element => {
-    questionListHTML =`<input type="radio" id={element} name="choice" value={element}>
-                      <label for={element}>{element}</label>`;
-    questionHTML += questionListHTML; 
-  });
-  //complete the form
-  questionHTML += `</form>`
-  //add questionHTML to the page
+                        <p>${question}</p>
+                        ${generateAnswerList(answerList)}
+                        <button type="submit" id="submit-answer-btn" tabindex="5">Submit</button>
+                        <button type="button" id="next-question-btn" tabindex="6"> Next &gt;></button>
+                      </form>`;
 
+  //add questionHTML to the page
+  return questionHTML;
+
+}
+
+function generateAnswerList(answerList){
+  //add radio button element for each option
+  let answerListHTML = ''
+  answerList.forEach(element => {
+    answerListHTML +=`<input type="radio" id=${element} name="choice" value=${element}>
+                      <label for=${element}>${element}</label>`;
+  });
+  return answerListHTML;
 }
 
 function generateAnswerComment(isCorrect){
@@ -102,10 +110,10 @@ function generateAnswerComment(isCorrect){
   //if answer wrong say "incorrect" and display the correct answer
   let comment = ""
   if(isCorrect){
-    comment = "<p>Correct</p>"
+    comment = "<p>Correct</p>";
   }
   else{
-    comment = "Incorrect. The correct answer is {store[questionNumber].correctAnswer}"
+    comment = "Incorrect. The correct answer is {store[questionNumber].correctAnswer}";
   }
   //add comment to the page
 }
@@ -115,6 +123,14 @@ function generateAnswerComment(isCorrect){
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 function render(){
   //render the page with appropriate elements
+  //clear main html
+  $('main').html('');
+  if(store.quizStarted === false){
+    $('main').html(handleWelcomePage());
+  }
+  else{
+    $('main').html(generateQuizQuestion());
+  }
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -122,15 +138,12 @@ function render(){
 // These functions handle events (submit, click, etc)
 function handleWelcomePage(){
   //generate welcome page
-  if (store.quizStarted === false){
-    let welcomeHTML = `<div class="start-screen">
-                        <p>This quiz has questions about the game Dungeons and Dragons</p>
-                        <button type="button" id="start">Begin Quiz</button>
-                      </div>
-                      `;
-    $('main').html(welcomeHTML);
-    render();
-  }
+  let welcomeHTML = `<div class="start-screen">
+                      <p>This quiz has questions about the game Dungeons and Dragons</p>
+                      <button type="button" id="start">Begin Quiz</button>
+                    </div>
+                    `;
+  return welcomeHTML;
 }
 
 function handleBeginQuiz(){
@@ -173,7 +186,7 @@ function scoreQuestion(choice){
 
 function handleQuizApp(){
   render();
-  handleWelcomePage();
+  
   handleBeginQuiz();
   handleAnswerSubmitted();
   //handleNextQuestion();
