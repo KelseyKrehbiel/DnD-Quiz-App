@@ -18,7 +18,7 @@ header{
   justify-content: center;
 }
 
-div{
+div, form{
   background-color: gray;
   width: 70%;
   padding: 20px;
@@ -41,8 +41,12 @@ button{
   align-items: center;
   align-content: center;
   justify-content: center;
+}
 
 
+.answerList{
+  display: flex;
+  flex-direction: row;
 }
 
 

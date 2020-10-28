@@ -79,15 +79,16 @@ const store = {
 
 // These functions return HTML templates
 function generateQuizQuestion(){
+  console.log("generateQuizQuestion");
   //use question data to generate HTML
-  let question = store.questions[store.questionNumber].question;
-  let answerList = store.questions[store.questionNumber].answers;
+  //answer index starts at 0 so subtract from questionNumber.
+  let question = store.questions[store.questionNumber-1].question;
+  let answerList = store.questions[store.questionNumber-1].answers;
   //start the form
-  let questionHTML = `<form action="/action_page.php">
+  let questionHTML = `<form id = "answerForm" class = "answerForm">
                         <p>${question}</p>
                         ${generateAnswerList(answerList)}
-                        <button type="submit" id="submit-answer-btn" tabindex="5">Submit</button>
-                        <button type="button" id="next-question-btn" tabindex="6"> Next &gt;></button>
+                        <button type="submit" id="submitButton">Submit</button>
                       </form>`;
 
   //add questionHTML to the page
@@ -96,11 +97,13 @@ function generateQuizQuestion(){
 }
 
 function generateAnswerList(answerList){
-  //add radio button element for each option
+  //generate list of possible answers with radio button element for each option
   let answerListHTML = ''
   answerList.forEach(element => {
-    answerListHTML +=`<input type="radio" id=${element} name="choice" value=${element}>
-                      <label for=${element}>${element}</label>`;
+    answerListHTML +=`<p class = "answerList">
+                      <input type="radio" id=${element} name="choice" value=${element}>
+                      <label for=${element}>${element}</label>
+                      </p>`;
   });
   return answerListHTML;
 }
@@ -116,20 +119,29 @@ function generateAnswerComment(isCorrect){
     comment = "Incorrect. The correct answer is {store[questionNumber].correctAnswer}";
   }
   //add comment to the page
+  return comment;
+}
+
+function generateScoreAndNumber(){
+  //generate the current quiz score and question number
+  scoreAndNumberHTML =  `<div>
+                        <p>Question:${store.questionNumber}/5</p>
+                        <p>Score:${store.score}/5</p>
+                        </div>`;
+  return scoreAndNumberHTML;
 }
 
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 function render(){
-  //render the page with appropriate elements
   //clear main html
   $('main').html('');
   if(store.quizStarted === false){
     $('main').html(handleWelcomePage());
   }
   else{
-    $('main').html(generateQuizQuestion());
+    $('main').html(generateScoreAndNumber()+generateQuizQuestion());
   }
 }
 
@@ -138,32 +150,40 @@ function render(){
 // These functions handle events (submit, click, etc)
 function handleWelcomePage(){
   //generate welcome page
+  console.log("handleWelcomePage")
   let welcomeHTML = `<div class="start-screen">
                       <p>This quiz has questions about the game Dungeons and Dragons</p>
                       <button type="button" id="start">Begin Quiz</button>
                     </div>
                     `;
+  
   return welcomeHTML;
 }
 
 function handleBeginQuiz(){
   //when Start Quiz button is pressed show the first question
+  console.log("begin quiz")
   $('body').on('click', '#start', function (event) {
     store.quizStarted = true;
+    store.questionNumber = 1;
+    store.score = 0;
     render();
   });
 }
 
 function handleAnswerSubmitted(){
   //get the choice selection
-  $('body').on('submit','#question-form',function(event){
+  console.log("handleAnswerSubmitted")
+  $('body').on('submit','answerform',function(event){
     console.log("answer submitted");
     event.preventDefault();
+    //get the answer from the form
+    //extract the value from the selection
 
-    let selectedOption = $('input[name=options]:checked').val();
+    let selectedAnswer = "Player's Handbook"
   });
-  //let choice = 
   //send to grader function
+  scoreQuestion(selectedAnswer);
 
   //call answer tooltip function to display correct or incorrect information
   //
@@ -171,6 +191,7 @@ function handleAnswerSubmitted(){
 }
 
 function scoreQuestion(choice){
+  console.log("Scoring question");
   //compare it to the correct answer
   //determine if answer is correct
   //Update quiz score
@@ -182,13 +203,13 @@ function scoreQuestion(choice){
   else{
     generateAnswerComment(false);
   }
+  //increment question number regardless of score
+  store.questionNumber++;
 }
 
 function handleQuizApp(){
   render();
-  
   handleBeginQuiz();
-  handleAnswerSubmitted();
   //handleNextQuestion();
 }
 
