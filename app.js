@@ -59,7 +59,6 @@ const store = {
   questionNumber: 0,
   score: 0
 };
-
 /**
  * 
  * Technical requirements:
@@ -89,6 +88,7 @@ function generateQuizQuestion(){
                         <p>${question}</p>
                         ${generateAnswerList(answerList)}
                         <button type="submit" id="submitButton">Submit</button>
+                        <button type="next" id="nextButton">Next</button>
                       </form>`;
 
   //add questionHTML to the page
@@ -101,8 +101,8 @@ function generateAnswerList(answerList){
   let answerListHTML = ''
   answerList.forEach(element => {
     answerListHTML +=`<p class = "answerList">
-                      <input type="radio" id=${element} name="choice" value=${element}>
-                      <label for=${element}>${element}</label>
+                      <input type="radio" id="${element}" name="choice" value="${element}">
+                      <label for="${element}">${element}</label>
                       </p>`;
   });
   return answerListHTML;
@@ -111,15 +111,16 @@ function generateAnswerList(answerList){
 function generateAnswerComment(isCorrect){
   //if answer correct say "correct"
   //if answer wrong say "incorrect" and display the correct answer
-  let comment = ""
+  console.log("generateAnswerComment");
+  let commentHTML = ""
   if(isCorrect){
-    comment = "<p>Correct</p>";
+    commentHTML = "<p>Correct</p>";
   }
   else{
-    comment = "Incorrect. The correct answer is {store[questionNumber].correctAnswer}";
+    commentHTML = `<p>Incorrect. The correct answer is ${store.questions[store.questionNumber-1].correctAnswer}</p>`;
   }
   //add comment to the page
-  return comment;
+  $("form").append(commentHTML);
 }
 
 function generateScoreAndNumber(){
@@ -135,8 +136,9 @@ function generateScoreAndNumber(){
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 function render(){
+  console.log("render")
   //clear main html
-  $('main').html('');
+  //$('main').html('');
   if(store.quizStarted === false){
     $('main').html(handleWelcomePage());
   }
@@ -173,43 +175,51 @@ function handleBeginQuiz(){
 
 function handleAnswerSubmitted(){
   //get the choice selection
-  console.log("handleAnswerSubmitted")
-  $('body').on('submit','answerform',function(event){
+  //console.log("handleAnswerSubmitted")
+  $(document).submit(function(event){
     console.log("answer submitted");
     event.preventDefault();
     //get the answer from the form
     //extract the value from the selection
+    //console.log($(this));
 
     let selectedAnswer = "Player's Handbook"
+    //send to grader function
+    scoreQuestion(selectedAnswer);
+    render();
   });
-  //send to grader function
-  scoreQuestion(selectedAnswer);
-
   //call answer tooltip function to display correct or incorrect information
   //
-
 }
 
 function scoreQuestion(choice){
-  console.log("Scoring question");
+  console.log(`Scoring question ${store.questionNumber}`);
   //compare it to the correct answer
   //determine if answer is correct
   //Update quiz score
-  //return true or false if answer is correct
-  if(choice === store[questionNumber].correctAnswer){
-    score++;
+  if(choice === store.questions[store.questionNumber-1].correctAnswer){
+    console.log(`${choice} = ${store.questions[store.questionNumber-1].correctAnswer}`)
+    store.score++;
     generateAnswerComment(true);
   }
   else{
     generateAnswerComment(false);
   }
-  //increment question number regardless of score
-  store.questionNumber++;
+}
+
+function handleNextQuestion(){
+  $('main').on('click','#nextButton',function(event){
+    console.log("nextButton clicked")
+    store.questionNumber++;
+    console.log(`question ${store.questionNumber}`);
+    render();
+  });
 }
 
 function handleQuizApp(){
   render();
   handleBeginQuiz();
+  handleAnswerSubmitted();
   //handleNextQuestion();
 }
 
