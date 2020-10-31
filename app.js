@@ -12,7 +12,8 @@ const store = {
         "Character Guide",
         "Player's Handbook"
       ],
-      correctAnswer: "Player's Handbook"
+      correctAnswer: "Player's Handbook",
+      submittedAnswer: false
     },
     {
       question: 'What is not a core attribute for player characters?',
@@ -22,7 +23,8 @@ const store = {
         'Charisma',
         'Grit'
       ],
-      correctAnswer: 'Grit'
+      correctAnswer: 'Grit',
+      submittedAnswer: false
     },
     {
       question: 'What is the standard notation for a six sided dice?',
@@ -32,7 +34,8 @@ const store = {
         'd6',
         'cube'
       ],
-      correctAnswer: 'd6'
+      correctAnswer: 'd6',
+      submittedAnswer: false
     },
     {
       question: 'What is the name of the class that specializes an stealth and Sneak Attacks?',
@@ -42,7 +45,8 @@ const store = {
         'barbarian',
         'sneakster'
       ],
-      correctAnswer: 'rogue'
+      correctAnswer: 'rogue',
+      submittedAnswer: false
     },
     {
       question: 'How much distance does a grid square represent on a battle map?',
@@ -52,12 +56,14 @@ const store = {
         '12 inches',
         '1 mile'
       ],
-      correctAnswer: '5 feet'
+      correctAnswer: '5 feet',
+      submittedAnswer: false
     }
   ],
   quizStarted: false,
   questionNumber: 0,
-  score: 0
+  score: 0,
+  answerFeedback: ''
 };
 /**
  * 
@@ -88,7 +94,7 @@ function generateQuizQuestion(){
                         <p>${question}</p>
                         ${generateAnswerList(answerList)}
                         <button type="submit" id="submitButton">Submit</button>
-                        <button type="next" id="nextButton">Next</button>
+                        <button type="button" id="nextButton">Next</button>
                       </form>`;
 
   //add questionHTML to the page
@@ -108,9 +114,10 @@ function generateAnswerList(answerList){
   return answerListHTML;
 }
 
-function generateAnswerComment(isCorrect){
+function generateAnswerComment(){
   //if answer correct say "correct"
   //if answer wrong say "incorrect" and display the correct answer
+  let isCorrect = store.questions[store.questionNumber-1].submittedAnswer === store.questions[store.questionNumber-1].correctAnswer;
   console.log("generateAnswerComment");
   let commentHTML = ""
   if(isCorrect){
@@ -120,7 +127,7 @@ function generateAnswerComment(isCorrect){
     commentHTML = `<p>Incorrect. The correct answer is ${store.questions[store.questionNumber-1].correctAnswer}</p>`;
   }
   //add comment to the page
-  $("form").append(commentHTML);
+  return commentHTML;
 }
 
 function generateScoreAndNumber(){
@@ -139,9 +146,15 @@ function render(){
   console.log("render")
   //clear main html
   //$('main').html('');
+  let currentQuestion = store.questions[store.questionNumber-1];
   if(store.quizStarted === false){
     $('main').html(handleWelcomePage());
   }
+  //if question answered give feedback
+  else if(currentQuestion.submittedAnswer){
+    $('main').html(generateScoreAndNumber()+generateQuizQuestion()+generateAnswerComment());
+  }
+  //if not answered display question
   else{
     $('main').html(generateScoreAndNumber()+generateQuizQuestion());
   }
@@ -175,40 +188,39 @@ function handleBeginQuiz(){
 
 function handleAnswerSubmitted(){
   //get the choice selection
-  //console.log("handleAnswerSubmitted")
-  $(document).submit(function(event){
+  console.log("handleAnswerSubmitted")
+  //when the 'answerForm' form is submitted do stuff
+  $('body').on('submit','#answerForm',function(event){
     console.log("answer submitted");
     event.preventDefault();
     //get the answer from the form
     //extract the value from the selection
-    //console.log($(this));
-
-    let selectedAnswer = "Player's Handbook"
-    //send to grader function
-    scoreQuestion(selectedAnswer);
+    store.questions[store.questionNumber-1].submittedAnswer = $('input:checked').val()
+    console.log(store.questions[store.questionNumber-1].submittedAnswer);
+    //call grader function
+    scoreQuestion();
     render();
   });
-  //call answer tooltip function to display correct or incorrect information
-  //
 }
 
-function scoreQuestion(choice){
+function scoreQuestion(){
   console.log(`Scoring question ${store.questionNumber}`);
   //compare it to the correct answer
   //determine if answer is correct
   //Update quiz score
+  choice = store.questions[store.questionNumber-1].submittedAnswer;
   if(choice === store.questions[store.questionNumber-1].correctAnswer){
     console.log(`${choice} = ${store.questions[store.questionNumber-1].correctAnswer}`)
     store.score++;
-    generateAnswerComment(true);
+    store.answerFeedback = true;
   }
   else{
-    generateAnswerComment(false);
+    store.answerFeedback = false;
   }
 }
 
 function handleNextQuestion(){
-  $('main').on('click','#nextButton',function(event){
+  $('body').on('click','#nextButton',function(event){
     console.log("nextButton clicked")
     store.questionNumber++;
     console.log(`question ${store.questionNumber}`);
@@ -220,7 +232,7 @@ function handleQuizApp(){
   render();
   handleBeginQuiz();
   handleAnswerSubmitted();
-  //handleNextQuestion();
+  handleNextQuestion();
 }
 
 $(handleQuizApp)
