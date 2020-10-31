@@ -139,6 +139,20 @@ function generateScoreAndNumber(){
   return scoreAndNumberHTML;
 }
 
+function generateResultsPage(){
+  //generate the ending results page
+  //should display score and have option to restart
+  let resultsHTML = `<div>
+                      <p><h1>Final Score</h1></p>
+                      <p><h1>${store.score}/5</h1></p>
+                      </div>
+                    <div>
+                      <p>Press the Restart button to play again</p>
+                      <p><button type="button" id="resetButton">Restart</button></p>
+                    </div>`;
+  return resultsHTML;
+}
+
 /********** RENDER FUNCTION(S) **********/
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
@@ -149,6 +163,10 @@ function render(){
   let currentQuestion = store.questions[store.questionNumber-1];
   if(store.quizStarted === false){
     $('main').html(handleWelcomePage());
+  }
+  else if(store.questionNumber > 5){
+    //out of questions. Show the results
+    $('main').html(generateResultsPage());
   }
   //if question answered give feedback
   else if(currentQuestion.submittedAnswer){
@@ -228,11 +246,27 @@ function handleNextQuestion(){
   });
 }
 
+function handleResetQuiz(){
+  //reset quiz values
+  $('body').on('click','#resetButton',function(event){
+    console.log("resetting quiz");
+    store.questionNumber = 0;
+    store.quizStarted = false;
+    store.score = 0;
+    //reset the submitted answers
+    for(let q=0; q < store.questions.length; q++){
+      store.questions[q].submittedAnswer = false;
+    }
+    render();
+  });
+}
+
 function handleQuizApp(){
   render();
   handleBeginQuiz();
   handleAnswerSubmitted();
   handleNextQuestion();
+  handleResetQuiz();
 }
 
 $(handleQuizApp)
