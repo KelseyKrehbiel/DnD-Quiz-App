@@ -104,12 +104,18 @@ function generateQuizQuestion(){
 
 function generateAnswerList(answerList){
   //generate list of possible answers with radio button element for each option
+  /*
+    <label>
+    <input type="radio" name="gender" value="male" required>
+    Male
+  </label><br>
+  */
   let answerListHTML = ''
   answerList.forEach(element => {
-    answerListHTML +=`<p class = "answerList">
-                      <input type="radio" id="${element}" name="choice" value="${element}">
-                      <label for="${element}">${element}</label>
-                      </p>`;
+    answerListHTML +=`<label class = "answerList">
+                      <input type="radio" id="${element}" name="choice" value="${element}" required>
+                      ${element}
+                      </label>`;
   });
   return answerListHTML;
 }
@@ -171,10 +177,18 @@ function render(){
   //if question answered give feedback
   else if(currentQuestion.submittedAnswer){
     $('main').html(generateScoreAndNumber()+generateQuizQuestion()+generateAnswerComment());
+    // disable all inputs
+    
+    $('input[type=radio]').attr('disabled', true);
+  
+    $('#submitButton').hide();
+    $('#nextButton').show();
   }
   //if not answered display question
   else{
     $('main').html(generateScoreAndNumber()+generateQuizQuestion());
+    $('#submitButton').show();
+    $('#nextButton').hide();
   }
 }
 
