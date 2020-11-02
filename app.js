@@ -127,10 +127,12 @@ function generateAnswerComment(){
   console.log("generateAnswerComment");
   let commentHTML = ""
   if(isCorrect){
-    commentHTML = "<p>Correct</p>";
+    commentHTML = "<div><p>Correct</p></div>";
   }
   else{
-    commentHTML = `<p>Incorrect. The correct answer is ${store.questions[store.questionNumber-1].correctAnswer}</p>`;
+    commentHTML = ` <div>
+                      <p>Incorrect. The correct answer is ${store.questions[store.questionNumber-1].correctAnswer}</p>
+                    </div>`;
   }
   //add comment to the page
   return commentHTML;

@@ -6,6 +6,11 @@
   * https://github.com/andreacardybailey/responsive_example/blob/master/styles/responsive-base.css 
   *
 */
+body{
+  background: cover;
+  background-image: url("media/aged paper.jpg");
+}
+
 main {
   margin-top: 60px;
 
@@ -18,10 +23,17 @@ header{
   justify-content: center;
 }
 
+h1{
+  color: #8C1C13;
+  -webkit-text-stroke: 1pt black;
+  font-size: 70px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
 div, form{
-  background-color: gray;
+  background-color: #E7D7C1;
   width: 70%;
-  padding: 20px;
+  padding: 10px;
   margin: auto;
 }
 
@@ -29,6 +41,7 @@ div, form{
 div p{
   display: flex;
   flex-direction: row;
+  text-align: center;
 }
 
 button{
