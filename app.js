@@ -38,7 +38,7 @@ const store = {
       submittedAnswer: false
     },
     {
-      question: 'What is the name of the class that specializes an stealth and Sneak Attacks?',
+      question: 'What is the name of the class that specializes in stealth and Sneak Attacks?',
       answers: [
         'rouge',
         'rogue',
@@ -90,11 +90,11 @@ function generateQuizQuestion(){
   let question = store.questions[store.questionNumber-1].question;
   let answerList = store.questions[store.questionNumber-1].answers;
   //start the form
-  let questionHTML = `<form id = "answerForm" class = "answerForm">
+  let questionHTML = `<form id = "answer-Form" class = "answer-Form">
                         <p>${question}</p>
                         ${generateAnswerList(answerList)}
-                        <button type="submit" id="submitButton">Submit</button>
-                        <button type="button" id="nextButton">Next</button>
+                        <button type="submit" id="submit-Button">Submit</button>
+                        <button type="button" id="next-Button">Next</button>
                       </form>`;
 
   //add questionHTML to the page
@@ -113,7 +113,7 @@ function generateAnswerList(answerList){
   let answerListHTML = ''
   answerList.forEach(element => {
     answerListHTML +=`<label class = "answerList">
-                      <input type="radio" id="${element}" name="choice" value="${element}" required>
+                      <input type="radio" id="${element}" name="option" value="${element}" required>
                       ${element}
                       </label>`;
   });
@@ -151,12 +151,12 @@ function generateResultsPage(){
   //generate the ending results page
   //should display score and have option to restart
   let resultsHTML = `<div>
-                      <p><h1>Final Score</h1></p>
-                      <p><h1>${store.score}/5</h1></p>
+                      <h1 class="results">Final Score</h1>
+                      <h1 class="results">${store.score}/5</h1>
                       </div>
                     <div>
                       <p>Press the Restart button to play again</p>
-                      <p><button type="button" id="resetButton">Restart</button></p>
+                      <p><button type="button" id="reset-Button">Restart</button></p>
                     </div>`;
   return resultsHTML;
 }
@@ -183,14 +183,14 @@ function render(){
     
     $('input[type=radio]').attr('disabled', true);
   
-    $('#submitButton').hide();
-    $('#nextButton').show();
+    $('#submit-Button').hide();
+    $('#next-Button').show();
   }
   //if not answered display question
   else{
     $('main').html(generateScoreAndNumber()+generateQuizQuestion());
-    $('#submitButton').show();
-    $('#nextButton').hide();
+    $('#submit-Button').show();
+    $('#next-Button').hide();
   }
 }
 
@@ -224,7 +224,7 @@ function handleAnswerSubmitted(){
   //get the choice selection
   console.log("handleAnswerSubmitted")
   //when the 'answerForm' form is submitted do stuff
-  $('body').on('submit','#answerForm',function(event){
+  $('body').on('submit','#answer-Form',function(event){
     console.log("answer submitted");
     event.preventDefault();
     //get the answer from the form
@@ -254,8 +254,8 @@ function scoreQuestion(){
 }
 
 function handleNextQuestion(){
-  $('body').on('click','#nextButton',function(event){
-    console.log("nextButton clicked")
+  $('body').on('click','#next-Button',function(event){
+    console.log("next-Button clicked")
     store.questionNumber++;
     console.log(`question ${store.questionNumber}`);
     render();
@@ -264,7 +264,7 @@ function handleNextQuestion(){
 
 function handleResetQuiz(){
   //reset quiz values
-  $('body').on('click','#resetButton',function(event){
+  $('body').on('click','#reset-Button',function(event){
     console.log("resetting quiz");
     store.questionNumber = 0;
     store.quizStarted = false;

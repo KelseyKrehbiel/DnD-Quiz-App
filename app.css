@@ -7,13 +7,14 @@
   *
 */
 body{
+  background-color: burlywood;
   background: cover;
   background-image: url("media/aged paper.jpg");
 }
 
 main {
-  margin-top: 60px;
-
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15pt;
 }
 
 /*header style*/
@@ -28,11 +29,16 @@ h1{
   -webkit-text-stroke: 1pt black;
   font-size: 70px;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+}
+
+.results{
+  font-size: 40px;
 }
 
 div, form{
   background-color: #E7D7C1;
-  width: 70%;
+  width: 60%;
   padding: 10px;
   margin: auto;
 }
@@ -41,21 +47,26 @@ div, form{
 div p{
   display: flex;
   flex-direction: row;
-  text-align: center;
-}
-
-button{
-  float: right;
-}
-
-.noBackground{
-  background-color: white;
-  text-align: center;
-  align-items: center;
-  align-content: center;
   justify-content: center;
 }
 
+button{
+  margin: auto;
+  display: block;
+  box-shadow:inset 0px 1px 0px 0px #cf866c;
+	background:linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+	background-color:#d0451b;
+	border-radius:3px;
+	border:1px solid #942911;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+	padding:6px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #854629;
+}
 
 .answerList{
   display: flex;
@@ -65,7 +76,7 @@ button{
 
 /* Groups & Items  (Desktop) */
 
-@media all and (min-width: 800px) {
+@media all and (max-width: 800px) {
 
   section, h1 {
       padding: 0 10%;
@@ -73,6 +84,10 @@ button{
 
   .group {
       flex-direction: row;
+  }
+
+  div, form{
+    width: 80%;
   }
 
 }
